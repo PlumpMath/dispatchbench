@@ -89,7 +89,8 @@
 
 	const imps = [
 		md.imp.nativeDispatch,
-		md.imp.stringMap
+		md.imp.stringMap,
+		md.imp.mapMap
 	]
 
 	imps.forEach(({ name, defineMulti }) => {
