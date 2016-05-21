@@ -1,12 +1,13 @@
 (function () {
 	'use strict'
 
-	function definePartials (prefix, constructors, mapping) {
+	function definePartials (prefix, constructors, buckets) {
 		constructors.forEach((constructor) => {
+			const bucket = buckets.get(constructor.name)
+
 			constructor.prototype[prefix] = function (...args) {
-				const argsKey = args.map((arg) => arg.constructor.name).join('')
-				const key = `${constructor.name}${argsKey}`
-				const method = mapping.get(key)
+				const key = args.map(({ constructor: { name } }) => name).join('')
+				const method = bucket.get(key)
 
 				return method.call(this, ...args)
 			}
@@ -14,14 +15,20 @@
 	}
 
 	function defineMulti (name, constructors, pairs) {
-		const mapping = new Map
+		const buckets = new Map
 
-		pairs.forEach(({ argTypes, method }) => {
-			const key = argTypes.map(({ name }) => name).join('')
-			mapping.set(key, method)
+		constructors.forEach((constructor) => {
+			buckets.set(constructor.name, new Map)
 		})
 
-		definePartials(name, constructors, mapping)
+		pairs.forEach(({ argTypes, method }) => {
+			const bucket = buckets.get(argTypes[0].name)
+			const key = argTypes.slice(1).map(({ name }) => name).join('')
+
+			bucket.set(key, method)
+		})
+
+		definePartials(name, constructors, buckets)
 	}
 
 	window.md = window.md || {}
