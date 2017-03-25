@@ -69,8 +69,8 @@ The tree structure for the Box-Sphere example would look like this:
 ```js
 Box ->
 	Box ->    function () { console.log('box x box') }
-    Sphere -> function () { console.log('box x sphere') }
+	Sphere -> function () { console.log('box x sphere') }
 Sphere ->
 	Box ->    function () { console.log('sphere x box') }
-    Sphere -> function () { console.log('sphere x sphere') }
+	Sphere -> function () { console.log('sphere x sphere') }
 ```
